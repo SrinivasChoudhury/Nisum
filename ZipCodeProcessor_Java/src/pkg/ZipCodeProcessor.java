@@ -5,7 +5,7 @@ import java.util.TreeSet;
 public class ZipCodeProcessor {
 	public static void main(String[] args) 
 	{
-		String input = "[94226,94399] [94200,94299] [94133,94133] [94133,94133] [94100,94199]";
+		String input = "[94200,94299] [94226,94399] [94133,94133] [94133,94133] [94130,94138] [94100,94199]";
 		String individualRanges[] = (input.replace("] [",";").replace("[", "").replace("]", "")).split(";");
 		SortedSet<Integer> start = new TreeSet<Integer>();
 		SortedSet<Integer> end = new TreeSet<Integer>();
@@ -34,6 +34,12 @@ public class ZipCodeProcessor {
 		        	start.add(newStart);
 		        	break;
 		        }
+		        else if(newStart >= currentStart && newEnd >= currentEnd && newStart <= currentEnd)
+		        {
+		        	end.remove(currentEnd);
+		        	end.add(newEnd);
+		        	break;
+		        }
 		        else if(newStart < currentStart && newEnd > currentEnd)
 		        {
 		        	start.remove(currentStart);
@@ -52,6 +58,21 @@ public class ZipCodeProcessor {
 	        	start.add(newStart);
 	        	end.add(newEnd);
 			}
+			Iterator p = start.iterator(), q = end.iterator();
+			if(p.hasNext())
+			{
+				p.next();
+			} 
+			while (p.hasNext() && q.hasNext()) 
+			{					
+					int nextStart = (int)p.next();
+					int currentEnd = (int)q.next();
+			        if( nextStart <= currentEnd && start.size() == end.size())
+			        {
+			        	start.remove(nextStart);
+			        	end.remove(currentEnd);
+			        }				
+		    }
 		}
 		Iterator i = start.iterator(), j = end.iterator();
 		System.out.println("Output:");
